@@ -1,0 +1,99 @@
+Problem Statements:
+1. Retrieve all successful bookings:
+2. Find the average ride distance for each vehicle type:
+3. Get the total number of cancelled rides by customers:
+4. List the top 5 customers who booked the highest number of rides:
+5. Get the number of rides cancelled by drivers due to personal and car-related issues:
+6. Find the maximum and minimum driver ratings for Prime Sedan bookings:
+7. Retrieve all rides where payment was made using UPI:
+8. Find the average customer rating per vehicle type:
+9. Calculate the total booking value of rides completed successfully:
+10. List all incomplete rides along with the reason:
+
+
+
+
+create database ola;
+use ola;
+
+#1. Retrieve all successful bookings:
+create view successful_Bookings as   -- here we saved every query as view to simplify it for other users rather than telling them whole query they can just select run the query for view  
+select*from ola_bookings where Booking_Status = 'success';
+
+#1. Retrieve all successful bookings:
+select*from successful_Bookings;
+
+
+#2. Find the average ride distance for each vehicle type:
+create view Avg_Ride_Distance as
+select Vehicle_Type, Avg(Ride_Distance) as avg_distance from ola_bookings
+group by Vehicle_Type;
+
+#2. Find the average ride distance for each vehicle type:
+select*from Avg_Ride_Distance;
+
+#3. Get the total number of cancelled rides by customers:
+create view total_Rides_Canceled_By_Customer as 
+select count(*) from ola_bookings where Booking_Status='Canceled by Customer';
+
+#3. Get the total number of cancelled rides by customers:
+select * from Rides_Canceled_By_Customer;
+
+#4. List the top 5 customers who booked the highest number of rides:
+create View top_5_Customers as 
+select customer_id, count(Booking_ID) as total_rides from ola_bookings 
+group by Customer_ID
+order by total_rides Desc limit 5;
+
+#4. List the top 5 customers who booked the highest number of rides:
+select* from top_5_Customers;
+
+#5. Get the number of rides cancelled by drivers due to personal and car-related issues:
+create view Rides_Canceled_by_Driver as 
+select count(*) from ola_bookings where Canceled_Rides_by_Driver='personal & car related issue';
+
+#5. Get the number of rides cancelled by drivers due to personal and car-related issues:
+select * from Rides_Canceled_by_Driver;
+
+#6. Find the maximum and minimum driver ratings for Prime Sedan bookings:
+create view Max_Min_Rating_for_Prime_Sedan as
+select Max(customer_rating) as Max_Ratings , Min(customer_Rating) as Min_Ratings from ola_bookings
+where Vehicle_Type = 'Prime Sedan';
+
+#6. Find the maximum and minimum driver ratings for Prime Sedan bookings:
+select * from Max_Min_Rating_for_Prime_Sedan;
+
+#7. Retrieve all rides where payment was made using UPI:
+CREATE VIEW rides_using_UPI As
+select * from ola_bookings where Payment_Method="UPI";
+
+#7. Retrieve all rides where payment was made using UPI:
+select * from rides_using_UPI;
+
+#8. Find the average customer rating per vehicle type:
+create view average_customer_rating_per_vehicle_type as
+select Vehicle_Type,(Customer_Rating) as avg_customer_rating from ola_bookings
+group by Vehicle_Type;
+
+#8. Find the average customer rating per vehicle type:
+select*from average_customer_rating_per_vehicle_type;
+ 
+#9. Calculate the total booking value of rides completed successfully:
+create view total_successful_ride_value as 
+select sum(Booking_Value) as total_successful_ride_value from ola_bookings
+where Booking_Status='Success';
+
+#9. Calculate the total booking value of rides completed successfully:
+select*from total_successful_ride_value;
+
+#10. List all incomplete rides along with the reason:
+create view Incomplete_Rides_Reason AS
+select Booking_ID, Incomplete_Rides_Reason from ola_bookings
+where Incomplete_Rides='Yes';
+
+#10. List all incomplete rides along with the reason:
+select*from Incomplete_Rides_Reason;
+
+
+#select COUNT(Incomplete_Rides) , Incomplete_Rides_Reason from ola_bookings
+#GROUP BY Incomplete_Rides_Reason;
